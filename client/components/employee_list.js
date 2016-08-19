@@ -1,22 +1,36 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { createContainer } from 'meteor/react-meteor-data';
 import { Employees } from '../../imports/collections/employees';
 import EmployeeDetail from './employee_detail';
 
 const PER_PAGE = 20;
 
-const EmployeeList = (props) =>{
-	//props.employees => an array of employee objects
 
-	return(
-		<div>
-			<div className='employee-list'>
-				{props.employees.map(employee =>
-				 <EmployeeDetail key={employee._id} employee={employee} />) }
+//refactor from a functional component to a class-based component
+//const EmployeeList = (props) =>{
+class EmployeeList extends Component {
+	componentWillMount() {
+		this.page = 1;
+	}
+
+	handleButtonClick() {
+		Meteor.subscribe('employees', PER_PAGE * (this.page + 1));
+		this.page += 1;
+	}
+	render(){
+	//props.employees => an array of employee objects
+	//Also class based ==> this.props
+
+		return(
+			<div>
+				<div className='employee-list'>
+					{this.props.employees.map(employee =>
+					 <EmployeeDetail key={employee._id} employee={employee} />) }
+				</div>
+				<button onClick={()=> this.handleButtonClick()} className='btn btn-primary'>Load More...</button>
 			</div>
-			<button onClick={()=>Meteor.subscribe('employees', 40)} className='btn btn-primary'>Load More...</button>
-		</div>
-		);
+			);
+	}
 
 };
 
