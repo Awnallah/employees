@@ -3,6 +3,8 @@ import { createContainer } from 'meteor/react-meteor-data';
 import { Employees } from '../../imports/collections/employees';
 import EmployeeDetail from './employee_detail';
 
+const PER_PAGE = 20;
+
 const EmployeeList = (props) =>{
 	//props.employees => an array of employee objects
 
@@ -12,6 +14,7 @@ const EmployeeList = (props) =>{
 				{props.employees.map(employee =>
 				 <EmployeeDetail key={employee._id} employee={employee} />) }
 			</div>
+			<button onClick={()=>Meteor.subscribe('employees', 40)} className='btn btn-primary'>Load More...</button>
 		</div>
 		);
 
@@ -20,7 +23,7 @@ const EmployeeList = (props) =>{
 
 export default createContainer(() =>{
 	//set up subscription from Emoployees collection
-	Meteor.subscribe('employees');
+	Meteor.subscribe('employees', PER_PAGE);
 
 	//return an object. The returned object will be sent to
 	//EmployeeList as props
